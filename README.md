@@ -42,6 +42,6 @@ Once the permissions are set, execute the script using the following command:
 ./install_dependencies.sh
 ```
 # Usage
-In each project folder, you will find detailed information on how to use and run the scripts for testing the code. Please refer to the specific README or documentation within each folder for comprehensive guidance on testing and running the provided code.
+For detailed instructions on running tests for graph operations and machine learning, please refer to the guides located in the scripts folder. Each guide provides step-by-step information on how to effectively test the code in these specific domains.
 
 
