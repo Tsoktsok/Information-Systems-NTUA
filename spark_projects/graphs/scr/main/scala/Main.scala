@@ -119,7 +119,7 @@ object Main {
         val aggregatedDF = stageMetrics.aggregateStageMetrics("PerfStageMetrics")
 
         // Create a dataframe with the metrics that we are actually interested in
-        var testDF = aggregatedDF.select("numStages", "elapsedTime", "executorRunTime", "executorCpuTime", "peakExecutionMemory")
+        var testDF = aggregatedDF.select("numStages", "elapsedTime", "executorRunTime", "executorCpuTime")
 
         testDF = testDF.withColumn("loadTime", lit(graphInfo._1))
         testDF = testDF.withColumn("loadMemory", lit(graphInfo._2))
