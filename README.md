@@ -37,7 +37,7 @@ To simplify the installation process, we provide a convenient script named insta
 ```
 chmod +x install_dependencies.sh
 ```
-Once the permissions are set, execute the script using the following command:
+Once the permissions are set, execute the script using the following command in every node:
 ```
 ./install_dependencies.sh
 ```
