@@ -6,7 +6,4 @@ How to use scripts:
 2_ml_ray : re run with different number of workers(worker1)
 ----stop/start ray worker2------
 3_ml_spark: just run (master)
-----shutdown worker2------
-3_ml_spark: re run for different number of workers(master)
------start worker2--------
 4_delete_files (worker1)

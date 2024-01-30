@@ -27,25 +27,20 @@ dataset_draft = spark.read.csv(csv_file_path, header=True, inferSchema=True)
 
 feature_columns = ["feature_" + str(i) for i in range(1, len(dataset_draft.columns))]
 
-# Add the label column name as the last element in the list
-#label_column = "label"
-#feature_columns.append(label_column)
-
 # Create a VectorAssembler to combine the feature columns into a vector
 assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 
 # Apply the assembler to your DataFrame
 dataset = assembler.transform(dataset_draft)
 
-# Persist the DataFrame with MEMORY_AND_DISK storage level
-#dataset.persist(StorageLevel.MEMORY_AND_DISK)
-
 #define model
 kmeans_model = KMeans(featuresCol="features", predictionCol="cluster", k=3)  # You can adjust the value of k
 trained_model = kmeans_model.fit(dataset)
+print("TELOS PROPONISI")
 
 
 data_file_path = args.process_data_path #"ml_data/data18000000.csv"
+print("KSEKINAW DIABASMA")
 
 start_time_load = time.time()
 pred_data_draft = spark.read.csv(data_file_path, header=True, inferSchema=True)
@@ -53,6 +48,7 @@ num_rows = pred_data_draft.count()
 print(num_rows)
 end_time_load = time.time()
 time_load = end_time_load - start_time_load
+print("TELOS DIABASMA")
 
 feature_columns = ["feature_" + str(i) for i in range(1, len(pred_data_draft.columns))]
 
@@ -66,12 +62,9 @@ assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 # Apply the assembler to your DataFrame
 pred_data = assembler.transform(pred_data_draft)
 
-# Persist the DataFrame with MEMORY_AND_DISK storage level
-#pred_data.persist(StorageLevel.MEMORY_AND_DISK)
-
-
 total_time = 0
 time_process = 0
+end_time_process = 0
 
 try:
     start_time_process = time.time()

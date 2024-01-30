@@ -37,13 +37,9 @@ assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 # Apply the assembler to your DataFrame
 dataset = assembler.transform(dataset_draft)
 
-# Persist the DataFrame with MEMORY_AND_DISK storage level
-#dataset.persist(StorageLevel.MEMORY_AND_DISK)
-
 #define model
 random_forest_model = RandomForestRegressor()
 trained_model=random_forest_model.fit(dataset)
-
 
 data_file_path = args.process_data_path #"ml_data/data18000000.csv"
 
@@ -66,15 +62,12 @@ assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 # Apply the assembler to your DataFrame
 pred_data = assembler.transform(pred_data_draft)
 
-# Persist the DataFrame with MEMORY_AND_DISK storage level
-#pred_data.persist(StorageLevel.MEMORY_AND_DISK)
-
-
 total_time = 0
 time_process = 0
-
+end_time_process = 0
 try:
     start_time_process = time.time()
+    print("ORA GIA MANTEPSIA")
     mp.measure_performance(trained_model, pred_data, "stats_ml.csv")
     print("DONE")
     end_time_process = time.time()
@@ -105,6 +98,3 @@ csv_file_path= "spark_stats_ml.csv"
 with open(csv_file_path, "a", newline="") as f:
         writer = csv.writer(f)
         writer.writerow([total_time, time_load , time_process ,memory_usage, num_nodes, num_rows_training, num_rows_process, num_features,tool, process])
-
-
-#pred_data.unpersist()

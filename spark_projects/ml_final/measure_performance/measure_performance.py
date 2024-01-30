@@ -53,11 +53,7 @@ def measure_performance(model, dataset, csv_file_path):
 
     # Fit the model to the dataset
     predictions = model.transform(dataset)
-    #print("HERE ARE THE PREDS")
-    #predictions.show()
-    #num_rows = predictions.count()
-    #print("HERE ARE THE ROWS")
-    #print(num_rows)
+
     end_time = time.time()
     total_time = end_time - start_time
 

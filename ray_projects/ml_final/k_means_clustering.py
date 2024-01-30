@@ -6,12 +6,15 @@ import psutil
 import numpy as np
 import csv
 import os
+from hdfs import InsecureClient
+from itertools import islice
+import argparse
 
+# Function to train a Random Forest Regressor model and measure time and memory usage
 @ray.remote
 def kmeans_clustering(start_line, end_line, model):
     HDFS_BASE_URL = "http://master:9870"
-    file_path = args.file_path
-    #file_path = "/user/user/ml_data/data18000000.csv"
+    file_path = args.process_data_path
     hdfs_client = InsecureClient(HDFS_BASE_URL, user='user')
     with hdfs_client.read(file_path, encoding='utf-8') as file:
         # Skip lines until you reach the starting line
@@ -36,12 +39,10 @@ def kmeans_clustering(start_line, end_line, model):
 
     return partition_predictions, memory_usage
 
-
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Generate a large dataset in CSV format.")
-    parser.add_argument("--file_path", type=str, help="Path to the file")
-    parser.add_argument("--dataset_path", type=str, help="Path to the dataset")
+    parser.add_argument("--process_data_path", type=str, help="Path to the file")
+    parser.add_argument("--train_data_path", type=str, help="Path to the dataset")
     parser.add_argument("--rows", type=int, help="Number of rows in the dataset", required=True)
     args = parser.parse_args()
 
@@ -50,7 +51,7 @@ if __name__ == "__main__":
 
 
     # Load the first dataset
-    dataset_path = args.dataset_path
+    dataset_path = args.train_data_path
     data = pd.read_csv(dataset_path)
 
     # Parallelize the model training across the Ray cluster
@@ -58,20 +59,18 @@ if __name__ == "__main__":
     y = data['label']
 
     # Initialize and train the Random Forest Regressor
-    print("KSEKINAW PROPONHSH")
     num_clusters=10
     kmeans_model = KMeans(n_clusters=num_clusters)
     kmeans_model.fit(X)
-    print("PROPONHSH TELOS")
-
-    n = 500000
+    n = 100000
     num_tasks = int((args.rows/n)+1)
 
     # Track start time
     start_time = time.time()
-    print("KSEKINAW DOULEIA")
 
-    results_refs = [kmeans_clustering.remote(i*n, (i+1)*n-1, rf_model) for i in range(num_tasks)]
+    # Pass the data_id to the remote function instead of the data partition
+    results_refs = [kmeans_clustering.remote(i*n, (i+1)*n-1, kmeans_model) for i in range(num_tasks)]
+
     # Combine results
     results = ray.get(results_refs)
 
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     end_time = time.time()
 
     # Calculate training time
-    predict_time = end_time - start_time
+    total_time = end_time - start_time
 
     # Combine results
     clusters = np.concatenate([result for result in kmeans_results])
@@ -93,16 +92,18 @@ if __name__ == "__main__":
     num_rows = data.shape[0]
     num_features = len(data.columns)
 
-    print(predict_time)
+    print(total_time)
     print(memory_usage)
-    print(num_rows)
+    print(args.rows)
     print(num_features)
 
-    csv_file_path="/home/user/ray_projects/ml/ray_stats_ml.csv"
+    nodes = ray.nodes()
+
+    csv_file_path = "/home/user/ray_projects/ml/ray_stats_ml.csv"
     try:
         with open(csv_file_path, "a", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow([predict_time, memory_usage, num_rows, num_features])
+            writer.writerow([total_time, memory_usage, len(nodes), num_rows, args.rows, num_features, "ray", "clustering"])
             print("Successfully wrote to CSV file.")
     except Exception as e:
         print(f"Error during file writing: {e}")
