@@ -1,9 +1,0 @@
-How to use scripts:
-
-1_ml_data_gen : change rows/features and run. (worker1)
-2_ml_ray :  change rows at the end of ray submit and run(worker1)
-----stop/start ray worker2------
-2_ml_ray : re run with different number of workers(worker1)
-----stop/start ray worker2------
-3_ml_spark: just run (master)
-4_delete_files (worker1)
