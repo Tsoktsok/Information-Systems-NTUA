@@ -44,4 +44,11 @@ Once the permissions are set, execute the script using the following command in 
 # Usage
 For detailed instructions on running tests for graph operations and machine learning, please refer to the guides located in the scripts folder. Each guide provides step-by-step information on how to effectively test the code in these specific domains.
 
+# Paper and Results
+
+Additionally, there are two folders of particular interest:
+
+The paper folder contains our comprehensive paper based on the results and findings. Feel free to explore it for a deeper understanding of our analysis.
+
+In the results folder, you'll find our detailed test results, allowing you to read and compare the outcomes of the experiments.
 
