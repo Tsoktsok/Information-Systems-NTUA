@@ -1,2 +1,0 @@
-total_time, memory_usage, num_nodes, num_rows_training,num_rows_process, num_features, tool, process
-2.498537302017212,70808,3,200,1000,100,spark,predict
